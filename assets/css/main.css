@@ -1,10 +1,13 @@
 
+body {
+  background-image: url('/assets/images/bg.jpeg');
+  background-repeat: repeat;
+  background-size: auto;
+}
+
 .search-form {
   width: 100vw;
   height: 100vh;
-  background-image: url('/assets/images/bg.jpeg');
-  background-repeat: no-repeat;
-  background-size: cover;
   color: #fafafa;
   padding-top: 50px;
 }
@@ -22,4 +25,50 @@
 .search-form .submit-button {
   background-color: #e4e2dd;
   color: #101010;
+}
+
+.grecaptcha-badge {
+  opacity:0 !important;
+}
+
+.terminal-wrp {
+  background-color: #807e7b;
+  padding: 3px;
+  border-radius: 5px;
+  box-shadow: 3px 3px 5px rgba(0,0,0,.5);
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: 25px;
+}
+
+.terminal {
+  background-color: #303030;
+  color: #f0f0f0;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.terminal .success {
+  color: #70ef70
+}
+
+.terminal .error {
+  color: #e04040
+}
+
+.output-wrp {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.output {
+  color: #303030;
+  background-color: #f0f0f0;
+  padding: 1rem 1rem 0 1rem !important;
+  border-radius: 5px;
+  margin-bottom: 25px !important;
+}
+
+pre {
+  margin-bottom: 1rem;
 }

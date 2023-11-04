@@ -1,130 +1,141 @@
 (function() {
 
-  function onQueryWebGpt(e) {
+  // reCAPTCHA site-key.
+  const reCaptcha = '6LfVd20fAAAAAC2tcJ55RvOEkraQL390cDw2yiT2';
 
-    // Disabling form elements.
-    const instruction = document.getElementById('instruction');
-    const query = document.getElementById('query');
-    const submit = document.getElementById('submit');
+  // Our SignalR socket connection.
+  let ainiro_con = null;
 
-    const web_gpt_output = document.getElementById('web_gpt_output');
-    const terminal = document.getElementById('terminal-wrp');
-    const terminalContent = document.getElementById('terminal');
-    const errLbl = document.getElementById('web_gpt_error');
-    instruction.disabled = true;
-    query.disabled = true;
-    submit.disabled = true;
-    web_gpt_output.style.display = 'none';
-    terminal.style.display = 'block';
-    terminalContent.innerHTML = '';
-    errLbl.style.display = 'none';
+  // Buffer for result from query.
+  let ainiroTempContent = '';
 
-    // Getting a random socket channel from server.
-    fetch('http://localhost:5000/magic/system/misc/gibberish?min=20&max=30', {
-      method: 'GET',
-    }).then(res => {
-      return res.json();
-    }).then(res => {
-
-      // Closing old socket connection if it's already open.
-      ainiro_con?.stop();
-
-      // Buffer for HTML.
-      let ainiroTempContent = '';
-
-      // Opening socket.
-      ainiro_con = new signalR.HubConnectionBuilder()
-        .withAutomaticReconnect()
-        .withUrl('http://localhost:5000/sockets', {
-          skipNegotiation: true,
-          transport: signalR.HttpTransportType.WebSockets,
-        }).build();
-      ainiro_con.on(res.result, function (args) {
-
-        // Making an object our of message.
-        const obj = JSON.parse(args);
-
-        // Checking type of message.
-        if (obj.finished === true) {
-
-          // We're done!
-          instruction.disabled = false;
-          query.disabled = false;
-          submit.disabled = false;
-          const tmp = document.createElement('div');
-          tmp.className = 'success';
-          tmp.innerHTML = 'Done!';
-          terminalContent.appendChild(tmp);
-          terminalContent.scrollTop = terminalContent.scrollHeight;
-
-        } else if (obj.finish_reason) {
-
-          // We've got a finish reason.
-          const web_gpt_output = document.getElementById('web_gpt_output');
-          web_gpt_output.className = 'web-gpt col-12 offset-lg-2 col-lg-8 p-3 mt-3 ' + obj.finish_reason;
-
-        } else if (obj.type === 'system') {
-
-          // System message.
-          const tmp = document.createElement('div');
-          tmp.innerHTML = obj.message;
-          terminalContent.appendChild(tmp);
-          terminalContent.scrollTop = terminalContent.scrollHeight;
-
-        } else {
-
-          // Normal content message.
-          const web_gpt_output = document.getElementById('web_gpt_output');
-          const converter = new showdown.Converter();
-          ainiroTempContent += obj.message;
-          web_gpt_output.innerHTML = converter.makeHtml(ainiroTempContent);
-          if (web_gpt_output.style.display !== 'block') {
-            web_gpt_output.style.display = 'block';
-          }
-          web_gpt_output.querySelectorAll('pre code').forEach((el) => {
-            hljs.highlightElement(el);
-          });
-    }
-      });
-      ainiro_con.start().then(function () {
-
-        // Invoking reCAPTCHA.
-        grecaptcha.ready(function () {
-          grecaptcha
-            .execute('6LfVd20fAAAAAC2tcJ55RvOEkraQL390cDw2yiT2', { action: 'submit' })
-            .then(function (token) {
-
-              // Invoking query endpoint.
-              let url = 'http://localhost:5000/magic/system/openai/query';
-              url += '?session=' + encodeURIComponent(res.result);
-              url += '&query=' + encodeURIComponent(query.value);
-              url += '&instruction=' + encodeURIComponent(instruction.value);
-              url += '&recaptcha_response=' + encodeURIComponent(token);
-              fetch(url, {
-                method: 'GET'
-              })
-              .then(response => {
-                if (response.status !== 200) {
-                  throw response;
-                }
-                return response.json();
-              })
-              .catch(error => {
-                instruction.disabled = false;
-                query.disabled = false;
-                submit.disabled = false;
-                error.json().then(error => {
-                  errLbl.innerText = error.message;
-                  errLbl.style.display = 'block';
-                });
-              });
-            });
-          });
-      });
-    });
+  /*
+   * Function invoked when user performs a search.
+   * e is event object.
+   */
+  function onFormSubmit(e) {
 
     // Preventing default action.
     e.preventDefault();
+
+    // Resetting connection.
+    ainiro_con?.stop();
+    ainiro_con = null;
+
+    // Disabling form elements.
+    $('#search_form input, textarea, button').prop('disabled', 'disabled');
+
+    // Hiding output in case this is consecutive query.
+    $('#output').css('display', 'none');
+
+    // Resetting result elements.
+    $('#terminal').html('');
+    ainiroTempContent = '';
+
+    // Fetching gibberish used for our SignalR channel.
+    $.ajax({
+      dataType: 'json',
+      url: 'http://localhost:5000/magic/system/misc/gibberish',
+      data: {
+        min: 20,
+        max: 20
+      },
+      success: (data) => connect(data.result),
+    });
   }
+
+  /*
+   * Connects to result SignalR web socket.
+   * channel is name of SignalR method invoked from server when new messages are ready.
+   */
+  function connect(channel) {
+
+    // Creating our connection builder.
+    ainiro_con = new signalR.HubConnectionBuilder()
+      .withAutomaticReconnect()
+      .withUrl('http://localhost:5000/sockets', {
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets,
+      }).build();
+
+    // Subscribing to messages passed over channel.
+    ainiro_con.on(channel, (msg) => onMessage(JSON.parse(msg)));
+
+    // Starting SignalR connection.
+    ainiro_con.start().then(() => sendQuery(channel));
+  }
+
+  /*
+   * Invoked when a query should be sent to server.
+   */
+  function sendQuery(channel) {
+
+    // Invoking reCAPTCHA.
+    grecaptcha.ready(function () {
+      grecaptcha
+        .execute(reCaptcha, { action: 'submit' })
+        .then(function (token) {
+
+          // Invoking query endpoint.
+          $.ajax({
+            dataType: 'json',
+            url: 'http://localhost:5000/magic/system/openai/query',
+            data: {
+              session: channel,
+              query: $('#query').val(),
+              instruction: $('#instruction').val(),
+              recaptcha_response: token,
+            }
+          });
+        });
+    });
+  }
+
+  /*
+   * Invoked when server sends us a message.
+   * msg is message sent from server as object.
+   */
+  function onMessage(msg) {
+
+    // Checking type of message.
+    if (msg.finished === true) {
+
+      // We're done!
+      $('#instruction').removeAttr('disabled');
+      $('#query').removeAttr('disabled');
+      $('#submit').removeAttr('disabled');
+
+      // Adding the final done message to inform user that we're done with search.
+      const tmp = document.createElement('div');
+      tmp.className = 'success';
+      tmp.innerHTML = 'Done!';
+      $('#terminal').append(tmp);
+
+    } else if (msg.type === 'system') {
+
+      // System message.
+      if ($('#terminal').html() === '') {
+        $('#terminal-wrp').css('display', 'block');
+      }
+      const tmp = document.createElement('div');
+      tmp.innerHTML = msg.message;
+      $('#terminal').append(tmp);
+  
+    } else if (msg.message) {
+
+      // Normal content message.
+      const converter = new showdown.Converter();
+      ainiroTempContent += msg.message;
+      const output = $('#output');
+      output.html(converter.makeHtml(ainiroTempContent));
+      output.css('display', 'block');
+      output[0].querySelectorAll('pre code').forEach((el) => {
+        hljs.highlightElement(el);
+      });
+    }
+  }
+
+  // Attaching submit event to form, and associating with callback.
+  $('#search_form').on('submit', (event) => onFormSubmit(event));
 
 })();

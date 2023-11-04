@@ -6,40 +6,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Schwoogle</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
     <link rel="stylesheet" href="/assets/css/main.css" crossorigin="anonymous">
   </head>
   <body>
 
     <!-- Search form -->
-    <form class="search-form">
+    <form class="search-form" id="search_form">
       <div class="grid-container">
+
         <div class="grid-x grid-padding-x">
           <div class="medium-12 cell">
             <img src="/assets/images/logo.png" alt="Schwoogle logo" class="logo">
           </div>
         </div>
+
         <div class="grid-x grid-padding-x">
+
           <div class="medium-12 cell">
             <label>Search
-              <input type="text" placeholder="Search ..." autofocus>
+              <input type="text" id="query" placeholder="Search ..." autofocus>
             </label>
           </div>
+
           <div class="medium-12 cell">
             <label>Instructions
-              <textarea rows="3" placeholder="Instructions ...">Summarize the following content</textarea>
+              <textarea rows="3" id="instruction" placeholder="Instructions ...">Summarize the following content</textarea>
             </label>
           </div>
+
           <div class="medium-12 cell text-right">
-            <button class="submit button submit-button">Submit</button>
+            <button class="submit button submit-button" id="submit">Submit</button>
           </div>
+
         </div>
+
+        <!-- Terminal output -->
+        <div class="grid-x grid-padding-x terminal-wrp" id="terminal-wrp" style="display:none;">
+          <div id="terminal" class="medium-12 cell terminal"></div>
+        </div>
+        <!-- /Terminal output -->
+
+        <!-- OpenAI output -->
+        <div class="grid-x grid-padding-x output-wrp">
+          <div id="output" class="medium-12 cell output" style="display:none;"></div>
+        </div>
+        <!-- /OpenAI output -->
+
       </div>
+
     </form>
     <!-- /Search form -->
 
     <!-- jQuery + Foundation -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/js/foundation.min.js" crossorigin="anonymous"></script></head>
+    <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/js/foundation.min.js" crossorigin="anonymous"></script>
+    <script src="/assets/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfVd20fAAAAAC2tcJ55RvOEkraQL390cDw2yiT2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@2.0.3/dist/showdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script>
       $(document).foundation();
     </script>
