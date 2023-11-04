@@ -105,12 +105,6 @@
       $('#query').removeAttr('disabled');
       $('#submit').removeAttr('disabled');
 
-      // Adding the final done message to inform user that we're done with search.
-      const tmp = document.createElement('div');
-      tmp.className = 'success';
-      tmp.innerHTML = 'Done!';
-      $('#terminal').append(tmp);
-
     } else if (msg.type === 'system') {
 
       // System message.

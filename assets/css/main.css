@@ -23,9 +23,15 @@ body {
   color: #fafafa;
 }
 
+.search-form input,
+.search-form input:focus,
+.search-form textarea {
+  background-color: #21b8ed;
+}
+
 .search-form .submit-button {
-  background-color: #e4e2dd;
-  color: #101010;
+  background-color: #157497;
+  color: #f0f0f0;
 }
 
 .grecaptcha-badge {
