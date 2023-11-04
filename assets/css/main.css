@@ -3,6 +3,12 @@ body {
   background-color: #020c27;
 }
 
+.download {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
 .search-form {
   background-image: url('/assets/images/bg.jpeg');
   background-repeat: no-repeat;
