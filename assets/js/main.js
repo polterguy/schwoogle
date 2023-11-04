@@ -3,6 +3,9 @@
   // reCAPTCHA site-key.
   const reCaptcha = '6LfVd20fAAAAAC2tcJ55RvOEkraQL390cDw2yiT2';
 
+  // Base URL for backend.
+  const baseUrl = 'http://localhost:5000';
+
   // Our SignalR socket connection.
   let ainiro_con = null;
 
@@ -35,7 +38,7 @@
     // Fetching gibberish used for our SignalR channel.
     $.ajax({
       dataType: 'json',
-      url: 'http://localhost:5000/magic/system/misc/gibberish',
+      url: baseUrl + '/magic/system/misc/gibberish',
       data: {
         min: 20,
         max: 20
@@ -53,7 +56,7 @@
     // Creating our connection builder.
     ainiro_con = new signalR.HubConnectionBuilder()
       .withAutomaticReconnect()
-      .withUrl('http://localhost:5000/sockets', {
+      .withUrl(baseUrl + '/sockets', {
         skipNegotiation: true,
         transport: signalR.HttpTransportType.WebSockets,
       }).build();
@@ -79,7 +82,7 @@
           // Invoking query endpoint.
           $.ajax({
             dataType: 'json',
-            url: 'http://localhost:5000/magic/system/openai/query',
+            url: baseUrl + '/magic/system/openai/query',
             data: {
               session: channel,
               query: $('#query').val(),
