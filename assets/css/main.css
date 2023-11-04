@@ -1,11 +1,12 @@
 
 body {
-  background-image: url('/assets/images/bg.jpeg');
-  background-repeat: repeat;
-  background-size: auto;
+  background-color: #020c27;
 }
 
 .search-form {
+  background-image: url('/assets/images/bg.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
   width: 100vw;
   height: 100vh;
   color: #fafafa;
@@ -42,7 +43,7 @@ body {
 }
 
 .terminal {
-  background-color: #303030;
+  background-color: #101010;
   color: #f0f0f0;
   border-radius: 5px;
   padding: 10px;
@@ -62,8 +63,8 @@ body {
 }
 
 .output {
-  color: #303030;
-  background-color: #f0f0f0;
+  color: #101010;
+  background-color: #21b8ed;
   padding: 1rem 1rem 0 1rem !important;
   border-radius: 5px;
   margin-bottom: 25px !important;
