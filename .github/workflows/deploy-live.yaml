@@ -14,7 +14,7 @@ jobs:
         uses: jacobtomlinson/gha-find-replace@v2
         with:
           find: "http://localhost:5000"
-          replace: "https://schwoogle.servergardens.com"
+          replace: "https://schwoogle.com"
           regex: false
       - name: Archive
         if: success()
@@ -26,7 +26,7 @@ jobs:
         if: success()
         uses: fjogeleit/http-request-action@v1.14.0
         with:
-          url: 'https://schwoogle.servergardens.com/magic/system/file-system/overwrite-folder'
+          url: 'https://schwoogle.com/magic/system/file-system/overwrite-folder'
           method: 'PUT'
           timeout: 50000
           customHeaders: '{
