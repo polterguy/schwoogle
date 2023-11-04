@@ -1,7 +1,7 @@
 name: CI and CD for development environment deploy to cloudlet
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 jobs:
   archive-deploy:
     runs-on: ubuntu-latest
