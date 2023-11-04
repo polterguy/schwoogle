@@ -1,0 +1,25 @@
+
+.search-form {
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/assets/images/bg.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #fafafa;
+  padding-top: 50px;
+}
+
+.search-form .logo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.search-form label {
+  color: #fafafa;
+}
+
+.search-form .submit-button {
+  background-color: #e4e2dd;
+  color: #101010;
+}

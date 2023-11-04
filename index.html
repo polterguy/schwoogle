@@ -6,15 +6,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Schwoogle</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/main.css" crossorigin="anonymous">
   </head>
   <body>
-    <h1>Schwoogle</h1>
 
+    <!-- Search form -->
+    <form class="search-form">
+      <div class="grid-container">
+        <div class="grid-x grid-padding-x">
+          <div class="medium-12 cell">
+            <img src="/assets/images/logo.png" alt="Schwoogle logo" class="logo">
+          </div>
+        </div>
+        <div class="grid-x grid-padding-x">
+          <div class="medium-12 cell">
+            <label>Search
+              <input type="text" placeholder="Search ..." autofocus>
+            </label>
+          </div>
+          <div class="medium-12 cell">
+            <label>Instructions
+              <textarea rows="3" placeholder="Instructions ...">Summarize the following content</textarea>
+            </label>
+          </div>
+          <div class="medium-12 cell text-right">
+            <button class="submit button submit-button">Submit</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- /Search form -->
+
+    <!-- jQuery + Foundation -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/js/foundation.min.js" crossorigin="anonymous"></script></head>
     <script>
       $(document).foundation();
     </script>
+    <!-- /jQuery + Foundation -->
 
   </body>
 </html>
