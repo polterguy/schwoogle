@@ -10,11 +10,17 @@ jobs:
         uses: actions/checkout@v3
       - name: Remove files  
         run: rm -rf .git && rm -rf .github && rm -rf .vscode && rm -rf .gitignore
-      - name: Replace Purchase URL
+      - name: Replace base URL
         uses: jacobtomlinson/gha-find-replace@v2
         with:
           find: "http://localhost:5000"
-          replace: "https://schwoogle.com"
+          replace: "${{ secrets.URL }}"
+          regex: false
+      - name: Replace Google Analytics ID
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          find: "GOOGLE_ANALYTICS_ID"
+          replace: "${{ secrets.GOOGLE_ANALYTICS_ID }}"
           regex: false
       - name: Archive
         if: success()
@@ -26,7 +32,7 @@ jobs:
         if: success()
         uses: fjogeleit/http-request-action@v1.14.0
         with:
-          url: 'https://schwoogle.com/magic/system/file-system/overwrite-folder'
+          url: '${{ secrets.URL }}/magic/system/file-system/overwrite-folder'
           method: 'PUT'
           timeout: 50000
           customHeaders: '{

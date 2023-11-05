@@ -1,7 +1,7 @@
 (function() {
 
   // reCAPTCHA site-key.
-  const reCaptcha = '6LfVd20fAAAAAC2tcJ55RvOEkraQL390cDw2yiT2';
+  const reCaptcha = 'GOOGLE_ANALYTICS_ID';
 
   // Base URL for backend.
   const baseUrl = 'http://localhost:5000';
