@@ -22,6 +22,12 @@ jobs:
           find: "GOOGLE_ANALYTICS_ID"
           replace: "${{ secrets.GOOGLE_ANALYTICS_ID }}"
           regex: false
+      - name: Replace Google Analytics ID
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          find: "RECAPTCHA_SITE_KEY"
+          replace: "${{ secrets.RECAPTCHA_SITE_KEY }}"
+          regex: false
       - name: Archive
         if: success()
         uses: vimtor/action-zip@v1
