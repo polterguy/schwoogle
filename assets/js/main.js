@@ -1,7 +1,7 @@
 (function() {
 
   // reCAPTCHA site-key.
-  const reCaptcha = 'GOOGLE_ANALYTICS_ID';
+  const reCaptcha = 'RECAPTCHA_SITE_KEY';
 
   // Base URL for backend.
   const baseUrl = 'http://localhost:5000';
